@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  mti850-cluster:
+    build: .
+    container_name: mti850-hadoop-spark
+    hostname: localhost
+    restart: always
+    ports:
+      - "9870:9870"   # HDFS NameNode Web UI
+      - "9000:9000"   # HDFS IPC Port
+      - "8088:8088"   # YARN ResourceManager Web UI
+      - "4040-4045:4040-4045"   # Spark Application Web UIs (4040 default, 4041+ for extra sessions)
+      - "8888:8888"   # JupyterLab Web UI
+    volumes:
+      - ./workspace:/workspace
+    stdin_open: true
+    tty: true
