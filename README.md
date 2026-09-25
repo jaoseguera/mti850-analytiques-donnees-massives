@@ -1,4 +1,4 @@
-﻿# MTI850 - Analytiques des donnees massives: Hadoop & Spark Environment
+# MTI850 - Analytiques des donnees massives: Hadoop & Spark Environment
 
 Containerized environment configured with Apache Hadoop 3.5.0 (HDFS and YARN), Apache Spark 4.2.0, PySpark, and JupyterLab for the MTI850 course.
 
@@ -19,7 +19,7 @@ Containerized environment configured with Apache Hadoop 3.5.0 (HDFS and YARN), A
   - [Hadoop / HDFS Operations](#hadoop--hdfs-operations)
   - [Spark & PySpark Operations](#spark--pyspark-operations)
   - [JupyterLab Notebooks](#jupyterlab-notebooks)
-- [Container Lifecycle Management](#container-lifecycle-management)
+- [Laboratories and Practical Work](#laboratories-and-practical-work)
 - [Documentation Index](#documentation-index)
 
 ---
@@ -198,18 +198,52 @@ print("Spark version:", spark.version)
 
 ---
 
-## Container Lifecycle Management
+## Laboratories and Practical Work
 
-| Action | Command |
-| :--- | :--- |
-| View real-time container logs | `docker compose logs -f` |
-| Stop services (preserve state) | `docker compose stop` |
-| Resume stopped services | `docker compose start` |
-| Restart services | `docker compose restart` |
-| Stop and remove container | `docker compose down` |
-| Rebuild image from scratch | `docker compose build --no-cache` |
+The `workspace/` directory contains course assignments, laboratory notebooks, and verification scripts executed within the containerized JupyterLab environment.
 
----
+### 1. PD0 - First Steps (`workspace/PD0 First steps/`)
+
+Introductory notebooks and environment validation tests grouped in `workspace/PD0 First steps/`:
+
+- **Lab 0 - Environment Smoke Test (`Lab0-TestEnvironment.ipynb`)**:
+  - Validates the end-to-end integration of the Big Data stack inside JupyterLab.
+  - Initializes a PySpark `SparkSession` connected to the local cluster.
+  - Verifies read and write operations against HDFS (`hdfs://localhost:9000/...`).
+  - Tests basic Spark DataFrame transformations and word counting.
+  - Checks Matplotlib and MathJax/LaTeX rendering.
+
+- **Math and Python Review (`MathPythonReview.ipynb`)**:
+  - Refresher on linear algebra, matrix operations, and Python paradigms for big data.
+  - Vector and matrix calculations: scalar multiplication, element-wise products, dot products, matrix multiplications.
+  - NumPy array manipulation, slicing, and integration with PySpark `DenseVector`.
+  - Python functional programming paradigms: lambda expressions, argument binding, and function composition.
+
+- **Practical Spark Tutorial (`Tutoriel-Spark-Pratique.ipynb`)**:
+  - Hands-on guide covering Apache Spark fundamentals, RDDs, and PySpark DataFrames.
+  - Core RDD operations: line-by-line reading, actions (`.count()`, `.first()`), transformations (`.filter()`), word count, and in-memory persistence (`.cache()`).
+  - Modern PySpark DataFrame API: schema inspection, descriptive statistics (`.describe()`), column addition/casting, and filtering.
+  - Grouping and aggregations using `.groupBy()` and `.agg()`.
+  - Spark SQL queries on temporary registered views (`createOrReplaceTempView`).
+  - Benchmarking big data storage formats: plain-text CSV vs optimized columnar Parquet.
+
+### 2. PD1 - Text Analysis and Word Count (`workspace/PD1 Text Analysis and Word Count/`)
+- **Purpose**: Practical Assignment 1 (Devoir 1 / PD1) focused on developing a distributed text processing and word count pipeline using PySpark DataFrames and Spark SQL.
+- **Notebook**: `PD1-Word_Count-MTI850-A24.ipynb`
+- **Key implementations**:
+  - DataFrame transformations: string concatenation, word length computation via `length()`, and structured sorting.
+  - Frequency counting using `groupBy()` and group aggregation statistics (`mean()`, unique word counts).
+  - Robust text normalization: stripping punctuation and non-alphanumeric characters using regular expressions (`regexp_replace`), line tokenization with `split()`, and flattening token arrays into rows using `explode()`.
+  - End-to-end execution of the word count pipeline over large textual data.
+  - Verification of all solution steps against automated test suites with 100% test pass rate.
+
+### 3. Helper Modules and Test Framework
+- **`testmti850.py`** (present in `workspace/PD0 First steps/` and `workspace/PD1 Text Analysis and Word Count/`):
+  - **Purpose**: Automated unit testing and self-grading framework provided for the course.
+  - **Functionality**: Defines the `Test` class (`assertTrue`, `assertEquals`, `assertEqualsHashed`). It compares student outputs against SHA-1 hashes of expected solutions, allowing students to validate their code step-by-step directly in the notebook without exposing plain-text answer keys.
+- **`workspace/PD1 Text Analysis and Word Count/utilmti850.py`**:
+  - **Purpose**: Utility module for visualization and workspace inspection.
+  - **Functionality**: Provides `prepareSubplot` for rendering word frequency charts with Matplotlib, as well as introspection helpers (`printDataFrames`, `printLocalFunctions`) to inspect active variables and user-defined functions during notebook execution.
 
 ## Documentation Index
 

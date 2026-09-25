@@ -1,2 +1,4 @@
-/workspace
 /downloads
+**/__pycache__/
+**/.ipynb_checkpoints/
+**/.Trash-*
