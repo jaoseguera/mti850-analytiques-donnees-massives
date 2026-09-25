@@ -49,7 +49,7 @@ RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 ENV PYSPARK_PYTHON="/opt/venv/bin/python"
 ENV PYSPARK_DRIVER_PYTHON="/opt/venv/bin/python"
-ENV PYTHONPATH="${SPARK_HOME}/python:${PYTHONPATH}"
+ENV PYTHONPATH="/workspace:${SPARK_HOME}/python:${PYTHONPATH}"
 RUN pip install --no-cache-dir jupyterlab pandas numpy findspark
 
 # WebPDF export (Chromium-based, no LaTeX needed)

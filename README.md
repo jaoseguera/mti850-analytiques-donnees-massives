@@ -7,7 +7,6 @@ Containerized environment configured with Apache Hadoop 3.5.0 (HDFS and YARN), A
 ## Table of Contents
 
 - [Overview](#overview)
-- [Prerequisites](#prerequisites)
 - [Architecture and Port Mapping](#architecture-and-port-mapping)
 - [Quick Start Guide](#quick-start-guide)
   - [1. Download Binaries (One-time)](#1-download-binaries-one-time)
@@ -32,17 +31,6 @@ This repository provides a self-contained single-node cluster environment replac
 - **Java 17 OpenJDK**
 - **Python Virtual Environment** (`jupyterlab`, `pandas`, `numpy`, `findspark`)
 - **Persistent Storage** mapped to `./workspace`
-
----
-
-## Prerequisites
-
-- **Docker Desktop** installed and running (with WSL 2 backend on Windows)
-- **Docker Compose v2+**
-- **Memory Allocation:** Minimum 4 GB RAM assigned to Docker / WSL 2
-- **Shell:** Windows PowerShell or Unix Bash
-
----
 
 ## Architecture and Port Mapping
 
@@ -238,12 +226,13 @@ Introductory notebooks and environment validation tests grouped in `workspace/PD
   - Verification of all solution steps against automated test suites with 100% test pass rate.
 
 ### 3. Helper Modules and Test Framework
-- **`testmti850.py`** (present in `workspace/PD0 First steps/` and `workspace/PD1 Text Analysis and Word Count/`):
+- **`workspace/testmti850.py`**:
   - **Purpose**: Automated unit testing and self-grading framework provided for the course.
   - **Functionality**: Defines the `Test` class (`assertTrue`, `assertEquals`, `assertEqualsHashed`). It compares student outputs against SHA-1 hashes of expected solutions, allowing students to validate their code step-by-step directly in the notebook without exposing plain-text answer keys.
-- **`workspace/PD1 Text Analysis and Word Count/utilmti850.py`**:
+- **`workspace/utilmti850.py`**:
   - **Purpose**: Utility module for visualization and workspace inspection.
   - **Functionality**: Provides `prepareSubplot` for rendering word frequency charts with Matplotlib, as well as introspection helpers (`printDataFrames`, `printLocalFunctions`) to inspect active variables and user-defined functions during notebook execution.
+  - **Access**: Placed once at `workspace/` and accessible from all subdirectories (`PD0`, `PD1`, `PD2`) via container `PYTHONPATH=/workspace` and relative `sys.path.append('..')`.
 
 ## Documentation Index
 
