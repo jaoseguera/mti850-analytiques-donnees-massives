@@ -52,6 +52,10 @@ ENV PYSPARK_DRIVER_PYTHON="/opt/venv/bin/python"
 ENV PYTHONPATH="${SPARK_HOME}/python:${PYTHONPATH}"
 RUN pip install --no-cache-dir jupyterlab pandas numpy findspark
 
+# WebPDF export (Chromium-based, no LaTeX needed)
+RUN pip install --no-cache-dir "nbconvert[webpdf]" && \
+    playwright install --with-deps chromium
+
 # Configure Hadoop environment and JVM memory limits
 RUN echo "export JAVA_HOME=${JAVA_HOME}" >> /opt/hadoop/etc/hadoop/hadoop-env.sh && \
     echo "export HADOOP_HEAPSIZE_MAX=512m" >> /opt/hadoop/etc/hadoop/hadoop-env.sh && \
