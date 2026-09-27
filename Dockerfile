@@ -50,7 +50,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 ENV PYSPARK_PYTHON="/opt/venv/bin/python"
 ENV PYSPARK_DRIVER_PYTHON="/opt/venv/bin/python"
 ENV PYTHONPATH="/workspace:${SPARK_HOME}/python:${PYTHONPATH}"
-RUN pip install --no-cache-dir jupyterlab pandas numpy findspark
+RUN pip install --no-cache-dir jupyterlab pandas numpy findspark matplotlib
 
 # WebPDF export (Chromium-based, no LaTeX needed)
 RUN pip install --no-cache-dir "nbconvert[webpdf]" && \
