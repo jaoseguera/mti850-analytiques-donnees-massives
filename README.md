@@ -9,10 +9,9 @@ Containerized environment configured with Apache Hadoop 3.5.0 (HDFS and YARN), A
 - [Overview](#overview)
 - [Architecture and Port Mapping](#architecture-and-port-mapping)
 - [Quick Start Guide](#quick-start-guide)
-  - [1. Download Binaries (One-time)](#1-download-binaries-one-time)
-  - [2. Build the Docker Image](#2-build-the-docker-image)
-  - [3. Start the Environment](#3-start-the-environment)
-  - [4. Access Web Interfaces](#4-access-web-interfaces)
+  - [Option 1: Pre-built Docker Image (Recommended)](#option-1-pre-built-docker-image-recommended)
+  - [Option 2: Build from Scratch (Optional)](#option-2-build-from-scratch-optional)
+  - [Access Web Interfaces](#access-web-interfaces)
 - [Working with the Environment](#working-with-the-environment)
   - [Interactive Container Terminal](#interactive-container-terminal)
   - [Hadoop / HDFS Operations](#hadoop--hdfs-operations)
@@ -51,33 +50,51 @@ The local `./workspace` directory is mounted at `/workspace` inside the containe
 
 ## Quick Start Guide
 
-### 1. Download Binaries (One-time)
+### Option 1: Pre-built Docker Image (Recommended)
 
-To optimize Docker build performance and avoid downloading large files during each image build, download the Hadoop and Spark archive files into the `downloads/` directory.
+By default, `docker-compose.yaml` uses the pre-built image (`jaoseguera/mti850-hadoop-spark:latest`) hosted on Docker Hub. You do not need to download Hadoop or Spark archives or compile anything.
 
-Run the PowerShell helper script:
-
-```powershell
-.\download_prerequisites.ps1
-```
-
-Or manually download the following archives and place them in the `downloads/` folder:
-- **Hadoop 3.5.0:** `https://archive.apache.org/dist/hadoop/common/hadoop-3.5.0/hadoop-3.5.0.tar.gz`
-- **Spark 4.2.0:** `https://dlcdn.apache.org/spark/spark-4.2.0/spark-4.2.0-bin-hadoop3.tgz`
-
-### 2. Build the Docker Image
-
-```bash
-docker compose build
-```
-
-### 3. Start the Environment
+Simply run:
 
 ```bash
 docker compose up -d
 ```
 
-### 4. Access Web Interfaces
+Docker will automatically pull the image and start all cluster services.
+
+---
+
+### Option 2: Build from Scratch (Optional)
+
+If you prefer building the image locally or customizing the [Dockerfile](Dockerfile):
+
+1. **Download binary archives (one-time):**
+   Run the PowerShell helper script to download Hadoop 3.5.0 and Spark 4.2.0 into the `downloads/` folder:
+   ```powershell
+   .\download_prerequisites.ps1
+   ```
+   Or manually download:
+   - **Hadoop 3.5.0:** `https://archive.apache.org/dist/hadoop/common/hadoop-3.5.0/hadoop-3.5.0.tar.gz`
+   - **Spark 4.2.0:** `https://dlcdn.apache.org/spark/spark-4.2.0/spark-4.2.0-bin-hadoop3.tgz`
+
+2. **Enable local build in `docker-compose.yaml`:**
+   Uncomment `build: .` in [docker-compose.yaml](docker-compose.yaml):
+   ```yaml
+   services:
+     mti850-cluster:
+       image: jaoseguera/mti850-hadoop-spark:latest
+       build: .
+   ```
+
+3. **Build and start:**
+   ```bash
+   docker compose build
+   docker compose up -d
+   ```
+
+---
+
+### Access Web Interfaces
 
 - **JupyterLab:** Open http://localhost:8888 (Password / Token: `mti850`)
 - **HDFS File Browser:** Open http://localhost:9870

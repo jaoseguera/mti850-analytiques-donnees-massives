@@ -36,25 +36,24 @@ RUN ssh-keygen -A && \
     cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys && \
     chmod 0600 ~/.ssh/authorized_keys
 
-# Install Apache Hadoop 3.5.0 from local downloads archive
-ADD downloads/hadoop-3.5.0.tar.gz /opt/
-RUN mv /opt/hadoop-3.5.0 /opt/hadoop
+# Install Apache Hadoop 3.5.0 from local downloads archive (extract directly and omit offline docs)
+RUN --mount=type=bind,source=downloads/hadoop-3.5.0.tar.gz,target=/tmp/hadoop.tar.gz \
+    mkdir -p /opt/hadoop && \
+    tar -xzf /tmp/hadoop.tar.gz -C /opt/hadoop --strip-components=1 && \
+    rm -rf /opt/hadoop/share/doc
 
-# Install Apache Spark 4.2.0 from local downloads archive
-ADD downloads/spark-4.2.0-bin-hadoop3.tgz /opt/
-RUN mv /opt/spark-4.2.0-bin-hadoop3 /opt/spark
+# Install Apache Spark 4.2.0 from local downloads archive (extract directly)
+RUN --mount=type=bind,source=downloads/spark-4.2.0-bin-hadoop3.tgz,target=/tmp/spark.tgz \
+    mkdir -p /opt/spark && \
+    tar -xzf /tmp/spark.tgz -C /opt/spark --strip-components=1
 
 # Set up Python virtual environment with JupyterLab, PySpark bindings, and data science packages
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 ENV PYSPARK_PYTHON="/opt/venv/bin/python"
 ENV PYSPARK_DRIVER_PYTHON="/opt/venv/bin/python"
-ENV PYTHONPATH="/workspace:${SPARK_HOME}/python:${PYTHONPATH}"
+ENV PYTHONPATH="/workspace:${SPARK_HOME}/python"
 RUN pip install --no-cache-dir jupyterlab pandas numpy findspark matplotlib
-
-# WebPDF export (Chromium-based, no LaTeX needed)
-RUN pip install --no-cache-dir "nbconvert[webpdf]" && \
-    playwright install --with-deps chromium
 
 # Configure Hadoop environment and JVM memory limits
 RUN echo "export JAVA_HOME=${JAVA_HOME}" >> /opt/hadoop/etc/hadoop/hadoop-env.sh && \
