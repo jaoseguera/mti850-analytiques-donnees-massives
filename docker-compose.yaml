@@ -1,6 +1,8 @@
 services:
   mti850-cluster:
-    build: .
+    image: jaoseguera/mti850-hadoop-spark:latest
+    # Uncomment the next line to build the image from the Dockerfile in the current directory instead of pulling from Docker Hub
+    # build: .
     container_name: mti850-hadoop-spark
     hostname: localhost
     restart: always
