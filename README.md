@@ -242,19 +242,59 @@ Introductory notebooks and environment validation tests grouped in `workspace/PD
   - End-to-end execution of the word count pipeline over large textual data.
   - Verification of all solution steps against automated test suites with 100% test pass rate.
 
-### 3. Helper Modules and Test Framework
+### 3. PD2 - Web Server Log Analysis (`workspace/PD2 Web Server Log Analysis/`)
+- **Purpose**: Practical Assignment 2 (Devoir 2 / PD2) focused on parsing, cleaning, aggregating, and analyzing large-scale web server access logs in Common Log Format (CLF) from NASA's Kennedy Space Center using PySpark and HDFS.
+- **Notebook**: `PD2-Web_Server_Log-MTI850-A25 - complete.ipynb`
+- **Key implementations**:
+  - Raw log ingestion from HDFS (`hdfs://localhost:9000/Nasa_access_log_Aug95.txt`).
+  - Regex parsing into structured DataFrame columns via `regexp_extract` (host, timestamp, path, status, content_size).
+  - Data cleaning: identifying nulls and imputing zero content size using `.fillna({'content_size': 0})`.
+  - Custom UDF timestamp transformation converting CLF date strings into standard Spark `TimestampType`.
+  - Analysis of HTTP response codes, frequent hosts, and top requested paths.
+  - Temporal aggregations: counting unique hosts per day (`dayofmonth`), and joining daily totals to calculate average daily requests per unique host.
+  - In-depth HTTP 404 Not Found error investigation: filtering errors, ranking top error paths with tie-breaker logic, listing offending hosts, and daily/hourly error distributions (`hour`).
+  - Verification with `testmti850` automated test suite with 100% test pass rate.
+
+### 4. PD3 - Power Plant Output Prediction & Spark ML (`workspace/PD3 Power Plant Output Prediction/`)
+- **Purpose**: Practical Assignment 3 (Devoir 3 / PD3) focused on end-to-end Machine Learning pipelines with Spark ML to predict net hourly electrical energy output (PE) of a Combined Cycle Power Plant based on ambient environmental variables.
+- **Notebook**: `PD3-Power_Plant-MTI850-A24.ipynb`
+- **Dataset**: `CCPP.csv` (9,568 hourly observations of Ambient Temperature `AT`, Exhaust Vacuum `V`, Ambient Pressure `AP`, Relative Humidity `RH`, and Electrical Output `PE`).
+- **Key implementations**:
+  - Explicit custom schema definition using `StructType` and `DoubleType` to prevent type inference overhead.
+  - Exploratory data analysis via Spark SQL queries and Matplotlib scatter visualizations for feature-target correlation.
+  - Feature engineering using `VectorAssembler` to assemble input columns into a unified `features` dense vector.
+  - Deterministic train/test split (80/20) with random seed and DataFrame caching (`.cache()`).
+  - Supervised learning with Spark ML `Pipeline`: Linear Regression with regularization, extracting regression coefficients and intercept.
+  - Model evaluation using `RegressionEvaluator` (RMSE and R2 metrics).
+  - Statistical residual analysis: verifying Gaussian error distribution (68% within 1 RMSE, 95% within 2 RMSE) via histograms and pie charts.
+  - Hyperparameter tuning using `ParamGridBuilder` and 3-fold `CrossValidator` across regularization parameter grids.
+  - Non-linear modeling with `DecisionTreeRegressor` (tuning tree `maxDepth` to achieve RMSE 4.35 and R2 0.93).
+  - Ensemble learning with `RandomForestRegressor` (bagging across 30 trees, tuning `maxBins` to achieve RMSE 3.61 and R2 0.95).
+  - Verification with `testmti850` automated test suite with 100% test pass rate.
+
+### 5. Helper Modules and Test Framework
 - **`workspace/testmti850.py`**:
   - **Purpose**: Automated unit testing and self-grading framework provided for the course.
   - **Functionality**: Defines the `Test` class (`assertTrue`, `assertEquals`, `assertEqualsHashed`). It compares student outputs against SHA-1 hashes of expected solutions, allowing students to validate their code step-by-step directly in the notebook without exposing plain-text answer keys.
 - **`workspace/utilmti850.py`**:
   - **Purpose**: Utility module for visualization and workspace inspection.
   - **Functionality**: Provides `prepareSubplot` for rendering word frequency charts with Matplotlib, as well as introspection helpers (`printDataFrames`, `printLocalFunctions`) to inspect active variables and user-defined functions during notebook execution.
-  - **Access**: Placed once at `workspace/` and accessible from all subdirectories (`PD0`, `PD1`, `PD2`) via container `PYTHONPATH=/workspace` and relative `sys.path.append('..')`.
+  - **Access**: Placed once at `workspace/` and accessible from all subdirectories (`PD0`, `PD1`, `PD2`, `PD3`) via container `PYTHONPATH=/workspace` and relative `sys.path.append('..')`.
 
 ## Documentation Index
 
-Additional course guides and setup notes are located in the `documentation/` folder:
+Additional course guides, setup manuals, and syntax cheatsheets are located in the `documentation/` folder:
 
+### Technical Guides & Architecture
 - [documentation/VM-Hadoop-Spark-Tutorial-4.0.md](documentation/VM-Hadoop-Spark-Tutorial-4.0.md) - Official course tutorial converted to Markdown (VirtualBox + Ubuntu 26 VM setup).
 - [documentation/Docker-Hadoop-Spark-Setup.md](documentation/Docker-Hadoop-Spark-Setup.md) - Complete Docker environment architecture and configuration manual.
 - [documentation/Fix-VM-Memory-OOM.md](documentation/Fix-VM-Memory-OOM.md) - Memory configuration and Out-Of-Memory (OOM) troubleshooting guide.
+
+### Course Notebooks Cheat Sheets
+- [documentation/cheatsheets/README.md](documentation/cheatsheets/README.md) - Overview of all practical cheatsheets.
+- [documentation/cheatsheets/Lab0-TestEnvironment-CheatSheet.md](documentation/cheatsheets/Lab0-TestEnvironment-CheatSheet.md) - Environment Smoke Test & HDFS quick reference.
+- [documentation/cheatsheets/MathPythonReview-CheatSheet.md](documentation/cheatsheets/MathPythonReview-CheatSheet.md) - Linear algebra, NumPy, and PySpark DenseVector reference.
+- [documentation/cheatsheets/Tutoriel-Spark-Pratique-CheatSheet.md](documentation/cheatsheets/Tutoriel-Spark-Pratique-CheatSheet.md) - Spark RDDs, DataFrames, and SQL fundamentals.
+- [documentation/cheatsheets/PD1-Word-Count-CheatSheet.md](documentation/cheatsheets/PD1-Word-Count-CheatSheet.md) - Text analysis, regex cleaning, and word count pipelines.
+- [documentation/cheatsheets/PD2-Web-Server-Log-CheatSheet.md](documentation/cheatsheets/PD2-Web-Server-Log-CheatSheet.md) - Apache CLF log parsing, UDF timestamps, and 404 analysis.
+- [documentation/cheatsheets/PD3-Power-Plant-ML-CheatSheet.md](documentation/cheatsheets/PD3-Power-Plant-ML-CheatSheet.md) - Spark ML pipelines, regression, cross-validation, and ensembles.
