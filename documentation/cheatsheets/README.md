@@ -43,3 +43,11 @@ Reference guides and syntax cheatsheets for the MTI850 practical notebooks:
   - Evaluation metrics (RMSE, R2) and residual error analysis under Gaussian assumptions
   - Hyperparameter tuning via ParamGridBuilder and 3-fold CrossValidator
   - Algorithm comparison: Linear Regression vs Decision Trees vs Random Forests
+
+- [PD4: Movie Rating & Collaborative Filtering with ALS](PD4-Movie-Rating-CheatSheet.md)
+  - Native acceleration setup with OpenBLAS and LAPACK
+  - Descriptive ranking and threshold filtering on large-scale datasets
+  - Matrix factorization theory and Alternating Least Squares (ALS) optimization
+  - SPARK-14489 workaround for cold-start NaN handling in parameter grid search
+  - Performance benchmarking against naive global average baselines
+  - End-to-end user profile injection and personalized Top-N recommendation pipeline
