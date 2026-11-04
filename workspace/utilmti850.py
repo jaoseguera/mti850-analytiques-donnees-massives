@@ -2,6 +2,15 @@
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
+from subprocess import Popen, PIPE
+
+def listHDFSDir(hdfs_path):
+    process = Popen('hdfs dfs -ls -h {}'.format(hdfs_path), shell=True, stdout=PIPE, stderr=PIPE)
+    std_out, std_err = process.communicate()
+    if len(std_err) == 0:
+        print(std_out.decode())
+    else:    
+        print(std_err.decode())
 
 def prepareSubplot(xticks, yticks, figsize=(10.5, 6), hideLabels=False, gridColor='#999999',
                 gridWidth=1.0, subplots=(1, 1)):
